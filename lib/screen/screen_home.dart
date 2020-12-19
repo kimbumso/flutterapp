@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/model/api_adapter.dart';
 import 'package:flutter_app/screen/screen_quiz.dart';
 import 'package:flutter_app/model/model_quiz.dart';
+import 'package:flutter_app/screen/screen_vote.dart';
+import 'package:flutter_app/screen/screen_Login.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -62,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Scaffold(
             key: _scaffoldKey,
             appBar: AppBar(
-              title: Text('My Quiz App'),
+              title: Text('세력을 찾아라!'),
               backgroundColor: Colors.deepPurple,
               leading: Container(),
             ),
@@ -80,22 +82,22 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: EdgeInsets.all(width * 0.024),
                 ),
                 Text(
-                  '플러터 퀴즈앱',
+                  '세력주 찾는 앱',
                   style: TextStyle(
                     fontSize: width * 0.065,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Text(
-                  '퀴즈를 풀기 전 안내사항입니다.\n꼼꼼히 읽고 퀴즈 풀기를 눌러주세요.',
+                  ' 안내사항입니다.\n 세력 알람받고 성투합시다.',
                   textAlign: TextAlign.center,
                 ),
                 Padding(
                   padding: EdgeInsets.all(width * 0.048),
                 ),
-                _buildStep(width, '1. 랜덤으로 나오는 퀴즈 3개를 풀어보세요.'),
-                _buildStep(width, '2. 문제를 잘 읽고 정답을 고른 뒤 \n다음 문제 버튼을 눌러주세요.'),
-                _buildStep(width, '3. 만점을 향해 도전해보세요.'),
+                _buildStep(width, '1. 현재 수급이 몰리는 주.'),
+                _buildStep(width, '2. 급 등 락 \n 관리자 추천주 '),
+                _buildStep(width, '3. 로그인 전용'),
                 Padding(
                   padding: EdgeInsets.all(width * 0.048),
                 ),
@@ -110,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       child: RaisedButton(
                           child: Text(
-                            '지금 퀴즈 풀기',
+                            '수급 주 확인',
                             style: TextStyle(color: Colors.white),
                           ),
                           color: Colors.deepPurple,
@@ -134,6 +136,92 @@ class _HomeScreenState extends State<HomeScreen> {
                                   builder: (context) => QuizScreen(
                                     quizs: quizs,
                                   ),
+                                ),
+                              );
+                            });
+                          }),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(width * 0.018),
+                ),
+                Container(
+                  padding: EdgeInsets.only(bottom: width * 0.036),
+                  child: Center(
+                    child: ButtonTheme(
+                      minWidth: width * 0.8,
+                      height: height * 0.05,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: RaisedButton(
+                          child: Text(
+                            '추천 종목 보기',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          color: Colors.deepPurple,
+                          onPressed: () {
+                            _scaffoldKey.currentState.showSnackBar(SnackBar(
+                              content: Row(
+                                children: <Widget>[
+                                  CircularProgressIndicator(),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.only(left: width * 0.036),
+                                  ),
+                                  Text('lodiang ....'),
+                                ],
+                              ),
+                            ));
+                            _fetchQuizs().whenComplete(() {
+                              return Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => VoteScreen(),
+                                ),
+                              );
+                            });
+                          }),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(width * 0.018),
+                ),
+                Container(
+                  padding: EdgeInsets.only(bottom: width * 0.036),
+                  child: Center(
+                    child: ButtonTheme(
+                      minWidth: width * 0.8,
+                      height: height * 0.05,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: RaisedButton(
+                          child: Text(
+                            '로그인 하러 가기',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          color: Colors.deepPurple,
+                          onPressed: () {
+                            _scaffoldKey.currentState.showSnackBar(SnackBar(
+                              content: Row(
+                                children: <Widget>[
+                                  CircularProgressIndicator(),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.only(left: width * 0.036),
+                                  ),
+                                  Text('lodiang ....'),
+                                ],
+                              ),
+                            ));
+                            _fetchQuizs().whenComplete(() {
+                              return Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => LoginScreen(),
                                 ),
                               );
                             });
