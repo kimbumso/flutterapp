@@ -8,14 +8,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'chat.dart';
-import 'const.dart';
 import 'settings.dart';
-import 'widget/loading.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import '../main.dart';
+import 'package:flutter_app/config/palette.dart';
+import 'package:flutter_app/screens/chat/widgets/widgets.dart';
+import 'package:flutter_app/main.dart';
 
 class ChatHomeScreen extends StatefulWidget {
   final String currentUserId;
@@ -138,7 +138,7 @@ class ChatHomeScreenState extends State<ChatHomeScreen> {
                 EdgeInsets.only(left: 0.0, right: 0.0, top: 0.0, bottom: 0.0),
             children: <Widget>[
               Container(
-                color: themeColor,
+                color: Palette.themeColor,
                 margin: EdgeInsets.all(0.0),
                 padding: EdgeInsets.only(bottom: 10.0, top: 10.0),
                 height: 100.0,
@@ -175,14 +175,15 @@ class ChatHomeScreenState extends State<ChatHomeScreen> {
                     Container(
                       child: Icon(
                         Icons.cancel,
-                        color: primaryColor,
+                        color: Palette.primaryColor,
                       ),
                       margin: EdgeInsets.only(right: 10.0),
                     ),
                     Text(
                       'CANCEL',
                       style: TextStyle(
-                          color: primaryColor, fontWeight: FontWeight.bold),
+                          color: Palette.primaryColor,
+                          fontWeight: FontWeight.bold),
                     )
                   ],
                 ),
@@ -196,14 +197,15 @@ class ChatHomeScreenState extends State<ChatHomeScreen> {
                     Container(
                       child: Icon(
                         Icons.check_circle,
-                        color: primaryColor,
+                        color: Palette.primaryColor,
                       ),
                       margin: EdgeInsets.only(right: 10.0),
                     ),
                     Text(
                       'YES',
                       style: TextStyle(
-                          color: primaryColor, fontWeight: FontWeight.bold),
+                          color: Palette.primaryColor,
+                          fontWeight: FontWeight.bold),
                     )
                   ],
                 ),
@@ -243,7 +245,8 @@ class ChatHomeScreenState extends State<ChatHomeScreen> {
       appBar: AppBar(
         title: Text(
           'MAIN',
-          style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              color: Palette.primaryColor, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         actions: <Widget>[
@@ -257,14 +260,14 @@ class ChatHomeScreenState extends State<ChatHomeScreen> {
                       children: <Widget>[
                         Icon(
                           choice.icon,
-                          color: primaryColor,
+                          color: Palette.primaryColor,
                         ),
                         Container(
                           width: 10.0,
                         ),
                         Text(
                           choice.title,
-                          style: TextStyle(color: primaryColor),
+                          style: TextStyle(color: Palette.primaryColor),
                         ),
                       ],
                     ));
@@ -285,7 +288,8 @@ class ChatHomeScreenState extends State<ChatHomeScreen> {
                   if (!snapshot.hasData) {
                     return Center(
                       child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(themeColor),
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(Palette.themeColor),
                       ),
                     );
                   } else {
@@ -325,8 +329,8 @@ class ChatHomeScreenState extends State<ChatHomeScreen> {
                         placeholder: (context, url) => Container(
                           child: CircularProgressIndicator(
                             strokeWidth: 1.0,
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(themeColor),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                                Palette.themeColor),
                           ),
                           width: 50.0,
                           height: 50.0,
@@ -340,7 +344,7 @@ class ChatHomeScreenState extends State<ChatHomeScreen> {
                     : Icon(
                         Icons.account_circle,
                         size: 50.0,
-                        color: greyColor,
+                        color: Palette.greyColor,
                       ),
                 borderRadius: BorderRadius.all(Radius.circular(25.0)),
                 clipBehavior: Clip.hardEdge,
@@ -352,7 +356,7 @@ class ChatHomeScreenState extends State<ChatHomeScreen> {
                       Container(
                         child: Text(
                           'Nickname: ${document.data()['nickname']}',
-                          style: TextStyle(color: primaryColor),
+                          style: TextStyle(color: Palette.primaryColor),
                         ),
                         alignment: Alignment.centerLeft,
                         margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 5.0),
@@ -360,7 +364,7 @@ class ChatHomeScreenState extends State<ChatHomeScreen> {
                       Container(
                         child: Text(
                           'About me: ${document.data()['aboutMe'] ?? 'Not available'}',
-                          style: TextStyle(color: primaryColor),
+                          style: TextStyle(color: Palette.primaryColor),
                         ),
                         alignment: Alignment.centerLeft,
                         margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
@@ -381,7 +385,7 @@ class ChatHomeScreenState extends State<ChatHomeScreen> {
                           peerAvatar: document.data()['photoUrl'],
                         )));
           },
-          color: greyColor2,
+          color: Palette.greyColor2,
           padding: EdgeInsets.fromLTRB(25.0, 10.0, 25.0, 10.0),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),

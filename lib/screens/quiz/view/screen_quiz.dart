@@ -1,9 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/model/model_quiz.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
-import 'package:flutter_app/widget/widget_candidate.dart';
-import 'package:flutter_app/screen/screen_result.dart';
+import 'package:flutter_app/domain/quiz/src/models/model_quiz.dart';
+import 'package:flutter_app/screens/quiz/view/view.dart';
+import 'package:flutter_app/screens/quiz/widgets/widgets.dart';
 
 class QuizScreen extends StatefulWidget {
   List<Quiz> quizs;

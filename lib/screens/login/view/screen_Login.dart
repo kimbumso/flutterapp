@@ -1,11 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app/login/chathome.dart';
-import 'package:flutter_app/login/chatlogin.dart';
+import 'package:flutter_app/config/palette.dart';
 import 'package:flutter_signin_button/button_builder.dart';
-import '../login/register_page.dart';
-import '../login/signin_page.dart';
+import 'package:flutter_app/screens/login/view/register_page.dart';
+import 'package:flutter_app/screens/login/view/signin_page.dart';
+import 'package:flutter_app/screens/chat/chat.dart';
 
 FirebaseAuth auth = FirebaseAuth.instance;
 FirebaseApp secondaryApp = Firebase.app('Flutter_App');
@@ -14,7 +14,10 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Login')),
+      appBar: AppBar(
+        title: Text('세력을 찾아라!'),
+        backgroundColor: Palette.themeColor,
+      ),
       body: AuthTypeSelector(),
     );
   }
@@ -33,7 +36,7 @@ class AuthTypeSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Firebase Example App"),
+        title: Text("login App"),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,17 +61,17 @@ class AuthTypeSelector extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             alignment: Alignment.center,
           ),
-          Container(
-            child: SignInButtonBuilder(
-              icon: Icons.verified_user,
-              backgroundColor: Colors.red,
-              text: 'Chat APP',
-              onPressed: () =>
-                  _pushPage(context, ChatLoginScreen(title: 'CHAT DEMO')),
-            ),
-            padding: const EdgeInsets.all(16),
-            alignment: Alignment.center,
-          ),
+          // Container(
+          //   child: SignInButtonBuilder(
+          //     icon: Icons.verified_user,
+          //     backgroundColor: Colors.red,
+          //     text: 'Chat APP',
+          //     onPressed: () =>
+          //         _pushPage(context, ChatLoginScreen(title: 'CHAT DEMO')),
+          //   ),
+          //   padding: const EdgeInsets.all(16),
+          //   alignment: Alignment.center,
+          // ),
         ],
       ),
     );

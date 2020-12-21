@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/model/model_quiz.dart';
-import 'package:flutter_app/screen/screen_home.dart';
+import 'package:flutter_app/domain/quiz/src/models/model_quiz.dart';
+import 'package:flutter_app/screens/home/home.dart';
 
 class ResultScreen extends StatelessWidget {
   List<int> answers;

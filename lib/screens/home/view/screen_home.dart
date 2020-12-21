@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/model/api_adapter.dart';
-import 'package:flutter_app/screen/screen_quiz.dart';
-import 'package:flutter_app/model/model_quiz.dart';
-import 'package:flutter_app/screen/screen_vote.dart';
-import 'package:flutter_app/screen/screen_Login.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_app/domain/quiz/src/models/models.dart';
+import 'package:flutter_app/screens/quiz/quiz.dart';
+import 'package:flutter_app/screens/login/login.dart';
+import 'package:flutter_app/config/palette.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -65,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
             key: _scaffoldKey,
             appBar: AppBar(
               title: Text('세력을 찾아라!'),
-              backgroundColor: Colors.deepPurple,
+              backgroundColor: Palette.themeColor,
               leading: Container(),
             ),
             body: Column(
@@ -74,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: <Widget>[
                 Center(
                   child: Image.asset(
-                    'images/cover.jpg',
+                    'assets/images/cover.jpg',
                     width: width * 0.3,
                   ),
                 ),

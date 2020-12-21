@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import '../const.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
+import 'package:flutter_app/config/palette.dart';
 
 class FullPhoto extends StatelessWidget {
   final String url;
@@ -14,7 +15,8 @@ class FullPhoto extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'FULL PHOTO',
-          style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              color: Palette.primaryColor, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),

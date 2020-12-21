@@ -2,14 +2,14 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'const.dart';
 import 'chathome.dart';
-import 'widget/loading.dart';
+
+import 'package:flutter_app/config/palette.dart';
+import 'package:flutter_app/screens/chat/widgets/widgets.dart';
 
 class ChatLoginScreen extends StatefulWidget {
   ChatLoginScreen({Key key, this.title}) : super(key: key);
@@ -131,7 +131,8 @@ class ChatLoginScreenState extends State<ChatLoginScreen> {
         appBar: AppBar(
           title: Text(
             widget.title,
-            style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                color: Palette.primaryColor, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
         ),

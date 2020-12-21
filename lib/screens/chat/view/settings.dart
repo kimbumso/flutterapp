@@ -5,10 +5,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'const.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:flutter_app/config/palette.dart';
 
 class ChatSettings extends StatelessWidget {
   @override
@@ -17,7 +18,8 @@ class ChatSettings extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'SETTINGS',
-          style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              color: Palette.primaryColor, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
       ),
@@ -183,7 +185,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                                         strokeWidth: 2.0,
                                         valueColor:
                                             AlwaysStoppedAnimation<Color>(
-                                                themeColor),
+                                                Palette.themeColor),
                                       ),
                                       width: 90.0,
                                       height: 90.0,
@@ -201,7 +203,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                               : Icon(
                                   Icons.account_circle,
                                   size: 90.0,
-                                  color: greyColor,
+                                  color: Palette.greyColor,
                                 ))
                           : Material(
                               child: Image.file(
@@ -217,12 +219,12 @@ class SettingsScreenState extends State<SettingsScreen> {
                       IconButton(
                         icon: Icon(
                           Icons.camera_alt,
-                          color: primaryColor.withOpacity(0.5),
+                          color: Palette.primaryColor.withOpacity(0.5),
                         ),
                         onPressed: getImage,
                         padding: EdgeInsets.all(30.0),
                         splashColor: Colors.transparent,
-                        highlightColor: greyColor,
+                        highlightColor: Palette.greyColor,
                         iconSize: 30.0,
                       ),
                     ],
@@ -242,19 +244,19 @@ class SettingsScreenState extends State<SettingsScreen> {
                       style: TextStyle(
                           fontStyle: FontStyle.italic,
                           fontWeight: FontWeight.bold,
-                          color: primaryColor),
+                          color: Palette.primaryColor),
                     ),
                     margin: EdgeInsets.only(left: 10.0, bottom: 5.0, top: 10.0),
                   ),
                   Container(
                     child: Theme(
                       data: Theme.of(context)
-                          .copyWith(primaryColor: primaryColor),
+                          .copyWith(primaryColor: Palette.primaryColor),
                       child: TextField(
                         decoration: InputDecoration(
                           hintText: 'Sweetie',
                           contentPadding: EdgeInsets.all(5.0),
-                          hintStyle: TextStyle(color: greyColor),
+                          hintStyle: TextStyle(color: Palette.greyColor),
                         ),
                         controller: controllerNickname,
                         onChanged: (value) {
@@ -273,19 +275,19 @@ class SettingsScreenState extends State<SettingsScreen> {
                       style: TextStyle(
                           fontStyle: FontStyle.italic,
                           fontWeight: FontWeight.bold,
-                          color: primaryColor),
+                          color: Palette.primaryColor),
                     ),
                     margin: EdgeInsets.only(left: 10.0, top: 30.0, bottom: 5.0),
                   ),
                   Container(
                     child: Theme(
                       data: Theme.of(context)
-                          .copyWith(primaryColor: primaryColor),
+                          .copyWith(primaryColor: Palette.primaryColor),
                       child: TextField(
                         decoration: InputDecoration(
                           hintText: 'Fun, like travel and play PES...',
                           contentPadding: EdgeInsets.all(5.0),
-                          hintStyle: TextStyle(color: greyColor),
+                          hintStyle: TextStyle(color: Palette.greyColor),
                         ),
                         controller: controllerAboutMe,
                         onChanged: (value) {
@@ -308,7 +310,7 @@ class SettingsScreenState extends State<SettingsScreen> {
                     'UPDATE',
                     style: TextStyle(fontSize: 16.0),
                   ),
-                  color: primaryColor,
+                  color: Palette.primaryColor,
                   highlightColor: Color(0xff8d93a0),
                   splashColor: Colors.transparent,
                   textColor: Colors.white,
@@ -327,7 +329,8 @@ class SettingsScreenState extends State<SettingsScreen> {
               ? Container(
                   child: Center(
                     child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(themeColor)),
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(Palette.themeColor)),
                   ),
                   color: Colors.white.withOpacity(0.8),
                 )
