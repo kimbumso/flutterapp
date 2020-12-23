@@ -2,8 +2,11 @@ import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:flutter/services.dart';
 import 'package:flutter_app/config/palette.dart';
+=======
+>>>>>>> 46ea07757a71e7152129c92def2ad63c09e2bf37
 import 'package:flutter_app/screens/home/home.dart';
 
 void main() async {

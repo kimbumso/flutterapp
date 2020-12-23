@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/domain/home/src/models/models.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:flutter_app/domain/quiz/src/models/models.dart';
+import 'package:flutter_app/screens/quiz/quiz.dart';
+import 'package:flutter_app/screens/login/login.dart';
 import 'package:flutter_app/config/palette.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -7,224 +11,246 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
-  List<HomeList> homeList = HomeList.homeList;
-  AnimationController animationController;
-  bool multiple = true;
+class _HomeScreenState extends State<HomeScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  List<Quiz> quizs = [];
+  bool isLoading = false;
 
-  @override
-  void initState() {
-    animationController = AnimationController(
-        duration: const Duration(milliseconds: 2000), vsync: this);
-    super.initState();
+  _fetchQuizs() async {
+    setState(() {
+      isLoading = true;
+    });
+    final response = await http.get('https://bskim01.herokuapp.com/quiz/3/');
+    if (response.statusCode == 200) {
+      setState(() {
+        quizs = parseQuizs(utf8.decode(response.bodyBytes));
+        isLoading = false;
+      });
+    } else {
+      throw Exception('fail to load');
+    }
   }
-
-  Future<bool> getData() async {
-    await Future<dynamic>.delayed(const Duration(milliseconds: 0));
-    return true;
-  }
-
-  @override
-  void dispose() {
-    animationController.dispose();
-    super.dispose();
-  }
+  // List<Quiz> quizs = [
+  //   Quiz.fromMap({
+  //     'title': 'test',
+  //     'candidates': ['a', 'b', 'c', 'd'],
+  //     'answer': 0
+  //   }),
+  //   Quiz.fromMap({
+  //     'title': 'test',
+  //     'candidates': ['a', 'b', 'c', 'd'],
+  //     'answer': 0
+  //   }),
+  //   Quiz.fromMap({
+  //     'title': 'test',
+  //     'candidates': ['a', 'b', 'c', 'd'],
+  //     'answer': 0
+  //   }),
+  // ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Palette.white,
-      body: FutureBuilder<bool>(
-        future: getData(),
-        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-          if (!snapshot.hasData) {
-            return const SizedBox();
-          } else {
-            return Padding(
-              padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  appBar(),
-                  Expanded(
-                    child: FutureBuilder<bool>(
-                      future: getData(),
-                      builder:
-                          (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                        if (!snapshot.hasData) {
-                          return const SizedBox();
-                        } else {
-                          return GridView(
-                            padding: const EdgeInsets.only(
-                                top: 0, left: 12, right: 12),
-                            physics: const BouncingScrollPhysics(),
-                            scrollDirection: Axis.vertical,
-                            children: List<Widget>.generate(
-                              homeList.length,
-                              (int index) {
-                                final int count = homeList.length;
-                                final Animation<double> animation =
-                                    Tween<double>(begin: 0.0, end: 1.0).animate(
-                                  CurvedAnimation(
-                                    parent: animationController,
-                                    curve: Interval((1 / count) * index, 1.0,
-                                        curve: Curves.fastOutSlowIn),
+    // MediaQuery = 현재기기의 여러 상태정보를 알수 있는 method
+    Size screenSize = MediaQuery.of(context).size;
+    double width = screenSize.width;
+    double height = screenSize.height;
+
+    // SafeArea는 기기의 상단 노티 바 부분, 하단 영역을 침범하지 않는 안전한 영역을
+    // 잡아주는 위젯
+    return WillPopScope(
+        onWillPop: () async => false,
+        child: SafeArea(
+          child: Scaffold(
+            key: _scaffoldKey,
+            appBar: AppBar(
+              title: Text('세력을 찾아라!'),
+              backgroundColor: Palette.themeColor,
+              leading: Container(),
+            ),
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Center(
+                  child: Image.asset(
+                    'assets/images/cover.jpg',
+                    width: width * 0.3,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(width * 0.024),
+                ),
+                Text(
+                  '세력주 찾는 앱',
+                  style: TextStyle(
+                    fontSize: width * 0.065,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  ' 안내사항입니다.\n 세력 알람받고 성투합시다.',
+                  textAlign: TextAlign.center,
+                ),
+                Padding(
+                  padding: EdgeInsets.all(width * 0.048),
+                ),
+                _buildStep(width, '1. 현재 수급이 몰리는 주.'),
+                _buildStep(width, '2. 급 등 락 \n 관리자 추천주 '),
+                _buildStep(width, '3. 로그인 전용'),
+                Padding(
+                  padding: EdgeInsets.all(width * 0.048),
+                ),
+                Container(
+                  padding: EdgeInsets.only(bottom: width * 0.036),
+                  child: Center(
+                    child: ButtonTheme(
+                      minWidth: width * 0.8,
+                      height: height * 0.05,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: RaisedButton(
+                          child: Text(
+                            '수급 주 확인',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          color: Colors.deepPurple,
+                          onPressed: () {
+                            _scaffoldKey.currentState.showSnackBar(SnackBar(
+                              content: Row(
+                                children: <Widget>[
+                                  CircularProgressIndicator(),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.only(left: width * 0.036),
                                   ),
-                                );
-                                animationController.forward();
-                                return HomeListView(
-                                  animation: animation,
-                                  animationController: animationController,
-                                  listData: homeList[index],
-                                  callBack: () {
-                                    Navigator.push<dynamic>(
-                                      context,
-                                      MaterialPageRoute<dynamic>(
-                                        builder: (BuildContext context) =>
-                                            homeList[index].navigateScreen,
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: multiple ? 2 : 1,
-                              mainAxisSpacing: 12.0,
-                              crossAxisSpacing: 12.0,
-                              childAspectRatio: 1.5,
-                            ),
-                          );
-                        }
-                      },
+                                  Text('lodiang ....'),
+                                ],
+                              ),
+                            ));
+                            _fetchQuizs().whenComplete(() {
+                              return Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => QuizScreen(
+                                    quizs: quizs,
+                                  ),
+                                ),
+                              );
+                            });
+                          }),
                     ),
                   ),
-                ],
-              ),
-            );
-          }
-        },
-      ),
-    );
+                ),
+                Padding(
+                  padding: EdgeInsets.all(width * 0.018),
+                ),
+                Container(
+                  padding: EdgeInsets.only(bottom: width * 0.036),
+                  child: Center(
+                    child: ButtonTheme(
+                      minWidth: width * 0.8,
+                      height: height * 0.05,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: RaisedButton(
+                          child: Text(
+                            '추천 종목 보기',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          color: Colors.deepPurple,
+                          onPressed: () {
+                            _scaffoldKey.currentState.showSnackBar(SnackBar(
+                              content: Row(
+                                children: <Widget>[
+                                  CircularProgressIndicator(),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.only(left: width * 0.036),
+                                  ),
+                                  Text('lodiang ....'),
+                                ],
+                              ),
+                            ));
+                            _fetchQuizs().whenComplete(() {
+                              return Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => VoteScreen(),
+                                ),
+                              );
+                            });
+                          }),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(width * 0.018),
+                ),
+                Container(
+                  padding: EdgeInsets.only(bottom: width * 0.036),
+                  child: Center(
+                    child: ButtonTheme(
+                      minWidth: width * 0.8,
+                      height: height * 0.05,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: RaisedButton(
+                          child: Text(
+                            '로그인 하러 가기',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          color: Colors.deepPurple,
+                          onPressed: () {
+                            _scaffoldKey.currentState.showSnackBar(SnackBar(
+                              content: Row(
+                                children: <Widget>[
+                                  CircularProgressIndicator(),
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.only(left: width * 0.036),
+                                  ),
+                                  Text('lodiang ....'),
+                                ],
+                              ),
+                            ));
+                            _fetchQuizs().whenComplete(() {
+                              return Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => LoginScreen(),
+                                ),
+                              );
+                            });
+                          }),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ));
   }
 
-  Widget appBar() {
-    return SizedBox(
-      height: AppBar().preferredSize.height,
+  Widget _buildStep(double width, String title) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(
+          width * 0.048, width * 0.024, width * 0.048, width * 0.024),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 8, left: 8),
-            child: Container(
-              width: AppBar().preferredSize.height - 8,
-              height: AppBar().preferredSize.height - 8,
-            ),
-          ),
-          Expanded(
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 4),
-                child: Text(
-                  '세력을 찾아라',
-                  style: TextStyle(
-                    fontSize: 22,
-                    color: Palette.darkText,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ),
-            ),
+          Icon(
+            Icons.check_box,
+            size: width * 0.04,
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 8, right: 8),
-            child: Container(
-              width: AppBar().preferredSize.height - 8,
-              height: AppBar().preferredSize.height - 8,
-              color: Colors.white,
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  borderRadius:
-                      BorderRadius.circular(AppBar().preferredSize.height),
-                  child: Icon(
-                    multiple ? Icons.dashboard : Icons.view_agenda,
-                    color: Palette.dark_grey,
-                  ),
-                  onTap: () {
-                    setState(() {
-                      multiple = !multiple;
-                    });
-                  },
-                ),
-              ),
-            ),
+            padding: EdgeInsets.only(right: width * 0.024),
           ),
+          Text(title),
         ],
       ),
-    );
-  }
-}
-
-class HomeListView extends StatelessWidget {
-  const HomeListView(
-      {Key key,
-      this.listData,
-      this.callBack,
-      this.animationController,
-      this.animation})
-      : super(key: key);
-
-  final HomeList listData;
-  final VoidCallback callBack;
-  final AnimationController animationController;
-  final Animation<dynamic> animation;
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: animationController,
-      builder: (BuildContext context, Widget child) {
-        return FadeTransition(
-          opacity: animation,
-          child: Transform(
-            transform: Matrix4.translationValues(
-                0.0, 50 * (1.0 - animation.value), 0.0),
-            child: AspectRatio(
-              aspectRatio: 1.5,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.all(Radius.circular(4.0)),
-                child: Stack(
-                  alignment: AlignmentDirectional.center,
-                  children: <Widget>[
-                    Image.asset(
-                      listData.imagePath,
-                      fit: BoxFit.cover,
-                    ),
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        splashColor: Colors.grey.withOpacity(0.2),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(4.0)),
-                        onTap: () {
-                          callBack();
-                        },
-                      ),
-                    ),
-                    Text(
-                      listData.title,
-                      style: Palette.titlebox,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
-      },
     );
   }
 }

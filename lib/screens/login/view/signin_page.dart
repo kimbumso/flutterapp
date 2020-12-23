@@ -4,6 +4,7 @@
 
 // ignore_for_file: deprecated_member_use
 
+<<<<<<< HEAD
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,6 +18,14 @@ import 'package:flutter_app/screens/login/widgets/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+=======
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_app/screens/chat/view/view.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
+
+import 'package:flutter_app/screens/login/widgets/widgets.dart';
+>>>>>>> 46ea07757a71e7152129c92def2ad63c09e2bf37
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -240,6 +249,7 @@ class _AnonymouslySignInSectionState extends State<_AnonymouslySignInSection> {
   }
 }
 
+<<<<<<< HEAD
 class _googleSignInSection extends StatefulWidget {
   _googleSignInSection({Key key}) : super(key: key);
 
@@ -390,5 +400,39 @@ class _googleSignInSectionState extends State<_googleSignInSection> {
             ],
           )),
     );
+=======
+class _googleSignInSection extends StatelessWidget {
+  void _pushPage(BuildContext context, Widget page) {
+    Navigator.of(context) /*!*/ .push(
+      MaterialPageRoute<void>(builder: (_) => page),
+    );
+  }
+
+  Widget build(BuildContext context) {
+    return Card(
+        child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  child: const Text('google Sign in',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  alignment: Alignment.center,
+                ),
+                Container(
+                  padding: const EdgeInsets.only(top: 16.0),
+                  alignment: Alignment.center,
+                  child: SignInButtonBuilder(
+                    text: "Sign In",
+                    icon: Icons.insert_link,
+                    backgroundColor: Colors.lightBlue,
+                    onPressed: () =>
+                        _pushPage(context, ChatLoginScreen(title: 'CHAT DEMO')),
+                  ),
+                ),
+              ],
+            )));
+>>>>>>> 46ea07757a71e7152129c92def2ad63c09e2bf37
   }
 }
