@@ -1,16 +1,9 @@
-<<<<<<< HEAD
 import 'package:flutter/material.dart';
 import 'dart:ui';
 
 class Palette {
   Palette._();
 
-=======
-import 'package:flutter/painting.dart';
-import 'dart:ui';
-
-class Palette {
->>>>>>> 46ea07757a71e7152129c92def2ad63c09e2bf37
   static const Color lightGrey = Color(0xffE5E5E5);
   static const Color darkerGrey = Color(0xff9E9E9E);
   static const Color lightBlue = Color(0xffC1F1EB);
@@ -18,7 +11,6 @@ class Palette {
   static const Color primaryColor = Color(0xff203152);
   static const Color greyColor = Color(0xffaeaeae);
   static const Color greyColor2 = Color(0xffE8E8E8);
-<<<<<<< HEAD
   static const Color redColor = Color(0xffdd4b39);
   static const String fontName = 'kims';
 
@@ -118,6 +110,4 @@ class Palette {
     letterSpacing: 0.2,
     color: lightText, // was lightText
   );
-=======
->>>>>>> 46ea07757a71e7152129c92def2ad63c09e2bf37
 }
