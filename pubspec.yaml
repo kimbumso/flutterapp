@@ -41,6 +41,7 @@ dependencies:
   intl: ^0.16.1
   font_awesome_flutter: ^8.11.0
   smooth_star_rating: ^1.1.1
+  provider: ^4.3.2+3
   
 
   # The following adds the Cupertino Icons font to your application.

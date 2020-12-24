@@ -133,6 +133,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     fontSize: 22,
                     color: Palette.darkText,
                     fontWeight: FontWeight.w700,
+                    backgroundColor: Palette.lightGrey,
                   ),
                 ),
               ),

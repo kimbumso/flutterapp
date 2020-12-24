@@ -1,98 +1,150 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_app/config/palette.dart';
 import 'package:flutter_app/domain/quiz/src/models/models.dart';
-import 'package:flutter_app/domain/quiz/src/models/model_quiz.dart';
-import 'package:flutter_app/screens/quiz/view/view.dart';
 import 'package:flutter_app/screens/quiz/widgets/widgets.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:provider/provider.dart';
 
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class QuizScreen extends StatefulWidget {
-  List<Quiz> quizs;
-  QuizScreen({this.quizs});
-  @override
-  _QuizScreenState createState() => _QuizScreenState();
-}
-
-class _QuizScreenState extends State<QuizScreen> {
-  List<Quiz> quizs = [];
-  Future<List<Quiz>> getQuiz() async {
-    final response = await http.get('https://bskim01.herokuapp.com/quiz/3/');
-    if (response.statusCode == 200) {
-      // 만약 서버가 OK 응답을 반환하면, JSON을 파싱합니다.
-      quizs = parseQuizs(utf8.decode(response.bodyBytes));
-      return quizs;
-    } else {
-      // 만약 응답이 OK가 아니면, 에러를 던집니다.
-      throw Exception('Failed to load post');
-    }
-  }
-
+class QuizScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return FutureProvider(
+      create: (_) => QuizProvider().loadQuizData(),
       child: Scaffold(
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: Palette.white,
         body: Center(
-            child: FutureBuilder<List<Quiz>>(
-                future: getQuiz(),
-                builder: (BuildContext context, AsyncSnapshot snapshot) {
-                  // 에러가 발생하면 에러 출력
-                  if (snapshot.hasError) print(snapshot.error);
-                  // 정상적으로 데이터가 수신된 경우
-                  var quizList = snapshot.data.length;
-                  print("quizList ${quizList}");
-                  return snapshot.hasData
-                      ? QuizList(quizss: snapshot.data)
-                      : CircularProgressIndicator();
-                })),
+          child: Container(
+              padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  appBar('quiz_App'),
+                  Expanded(
+                    child: QuizList(),
+                  ),
+                ],
+              )),
+        ),
+      ),
+    );
+  }
+
+  Widget appBar(context) {
+    return SizedBox(
+      height: AppBar().preferredSize.height,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(top: 8, left: 8),
+            child: Container(
+              width: AppBar().preferredSize.height - 8,
+              height: AppBar().preferredSize.height - 8,
+            ),
+          ),
+          Expanded(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Text(
+                  context,
+                  style: TextStyle(
+                    fontSize: 22,
+                    color: Palette.darkText,
+                    fontWeight: FontWeight.w700,
+                    backgroundColor: Palette.lightGrey,
+                  ),
+                ),
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
 }
 
+class QuizProvider {
+  final String _dataPath = "https://bskim01.herokuapp.com/quiz/3/";
+  List<Quiz> quizs;
+
+  Future<List<Quiz>> loadQuizData() async {
+    final response = await http.get(_dataPath);
+    if (response.statusCode == 200) {
+      // 만약 서버가 OK 응답을 반환하면, JSON을 파싱합니다.
+      return quizs = parseQuizs(utf8.decode(response.bodyBytes));
+    } else {
+      // 만약 응답이 OK가 아니면, 에러를 던집니다.
+      throw Exception('Failed to load post');
+    }
+  }
+}
+
 class QuizList extends StatelessWidget {
-  final List<Quiz> quizss;
   List<int> _answers = [-1, -1, -1];
   List<bool> _answerState = [false, false, false, false];
   int _currentIndex = 0;
-  SwiperController _controller = SwiperController();
+  ScrollController _controller = ScrollController();
+  // @override
+  // void initState() {
+  //   _controller = ScrollController();
+  //   _controller.addListener(_scrollListener); //the listener for up and down.
+  //   super.initState();
+  // }
 
-  QuizList({Key key, this.quizss}) : super(key: key);
+  // _scrollListener() {
+  //   if (_controller.offset >= _controller.position.maxScrollExtent &&
+  //       !_controller.position.outOfRange) {
+  //     setState(() {
+  //       //you can do anything here
+  //     });
+  //   }
+  //   if (_controller.offset <= _controller.position.minScrollExtent &&
+  //       !_controller.position.outOfRange) {
+  //     setState(() {
+  //       //you can do anything here
+  //     });
+  //   }
+  // }
 
-  BuildContext get context => null;
   @override
   Widget build(BuildContext context) {
+    var _quizs = Provider.of<List<Quiz>>(context);
     Size screenSize = MediaQuery.of(context).size;
     double width = screenSize.width;
     double height = screenSize.height;
-    // TODO: implement build
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.deepPurple,
-        body: Center(
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.deepPurple),
-            ),
-            width: width * 0.85,
-            height: height * 0.7,
-            child: Swiper(
-              controller: _controller,
-              physics: NeverScrollableScrollPhysics(),
-              loop: false,
-              itemCount: quizss.length,
-              itemBuilder: (BuildContext context, int index) {
-                // 컨테이너를 생성하여 반환
-                return _buildQuizCard(quizss[index], width, height);
-              },
-            ),
-          ),
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(top: 0, left: 12, right: 12),
+          child: Text('FutureProvider Example, users loaded from a File'),
         ),
-      ),
+        Expanded(
+          child: _quizs == null
+              ? Container(child: CupertinoActivityIndicator(radius: 50.0))
+              : ListView.builder(
+                  controller: _controller,
+                  itemCount: _quizs?.length ?? 0,
+                  shrinkWrap: true,
+                  itemBuilder: (BuildContext context, int index) {
+                    // return Container(
+                    //   height: 50,
+                    //   color: Colors.grey[(index * 200) % 400],
+                    //   child: Center(
+                    //     child: Text(
+                    //         '${_quizs[index].title} ${_quizs[index].answer} | ${_quizs[index].candidates}'),
+                    //   ),
+                    // );
+                    return _buildQuizCard(_quizs[index], width, height);
+                  }),
+        ),
+      ],
     );
   }
 
@@ -128,9 +180,6 @@ class QuizList extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(
-            child: Container(),
-          ),
           Column(
             children: _buildCandidates(width, quiz),
           ),
@@ -144,26 +193,10 @@ class QuizList extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: RaisedButton(
-                  child: _currentIndex == quizss.length - 1
-                      ? Text('결과보기')
-                      : Text('다음문제'),
+                  child: _currentIndex == 1 - 1 ? Text('결과보기') : Text('다음문제'),
                   textColor: Colors.white,
                   color: Colors.deepPurple,
-                  onPressed: _answers[_currentIndex] == -1
-                      ? null
-                      : () {
-                          if (_currentIndex == quizss.length - 1) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ResultScreen(
-                                        answers: _answers, quizs: quizss)));
-                          } else {
-                            _answerState = [false, false, false, false];
-                            _currentIndex += 1;
-                            _controller.next();
-                          }
-                        },
+                  onPressed: _answers[_currentIndex] == -1 ? null : () {},
                 ),
               ),
             ),
@@ -181,18 +214,7 @@ class QuizList extends StatelessWidget {
           text: quiz.candidates[i],
           width: width,
           answerState: _answerState[i],
-          tap: () {
-            setState(() {
-              for (int j = 0; j < 4; j++) {
-                if (j == i) {
-                  _answerState[j] = true;
-                  _answers[_currentIndex] = j;
-                } else {
-                  _answerState[j] = false;
-                }
-              }
-            });
-          }));
+          tap: () {}));
       _children.add(
         Padding(
           padding: EdgeInsets.all(width * 0.024),
@@ -201,6 +223,4 @@ class QuizList extends StatelessWidget {
     }
     return _children;
   }
-
-  void setState(Null Function() param0) {}
 }

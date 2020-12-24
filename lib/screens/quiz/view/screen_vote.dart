@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_app/config/palette.dart';
 
 final referenceDatabase = FirebaseDatabase.instance;
 
@@ -8,8 +9,56 @@ class VoteScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Baby Name Votes')),
-      body: _buildBody(context),
+      backgroundColor: Palette.white,
+      body: Center(
+        child: Container(
+          padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              appBar('recommand'),
+              Expanded(
+                child: _buildBody(context),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget appBar(context) {
+    return SizedBox(
+      height: AppBar().preferredSize.height,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(top: 8, left: 8),
+            child: Container(
+              width: AppBar().preferredSize.height - 8,
+              height: AppBar().preferredSize.height - 8,
+            ),
+          ),
+          Expanded(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Text(
+                  context,
+                  style: TextStyle(
+                    fontSize: 22,
+                    color: Palette.darkText,
+                    fontWeight: FontWeight.w700,
+                    backgroundColor: Palette.lightGrey,
+                  ),
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 
