@@ -2,9 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/config/palette.dart';
-import 'package:flutter_signin_button/button_builder.dart';
-import 'package:flutter_app/screens/login/view/register_page.dart';
-import 'package:flutter_app/screens/login/view/signin_page.dart';
+import 'package:flutter_app/screens/login/widgets/widgets.dart';
 import 'package:flutter_app/screens/chat/chat.dart';
 
 FirebaseAuth auth = FirebaseAuth.instance;
@@ -13,67 +11,57 @@ FirebaseApp secondaryApp = Firebase.app('Flutter_App');
 class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('세력을 찾아라!'),
-        backgroundColor: Palette.themeColor,
-      ),
-      body: AuthTypeSelector(),
-    );
-  }
-}
+    final Size size = MediaQuery.of(context).size;
 
-/// Provides a UI to select a authentication type page
-class AuthTypeSelector extends StatelessWidget {
-  // Navigates to a new page
-  void _pushPage(BuildContext context, Widget page) {
-    Navigator.of(context) /*!*/ .push(
-      MaterialPageRoute<void>(builder: (_) => page),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("login App"),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: Stack(
+        alignment: Alignment.center,
         children: <Widget>[
-          Container(
-            child: SignInButtonBuilder(
-              icon: Icons.person_add,
-              backgroundColor: Colors.indigo,
-              text: 'Registration',
-              onPressed: () => _pushPage(context, RegisterPage()),
-            ),
-            padding: const EdgeInsets.all(16),
-            alignment: Alignment.center,
+          CustomPaint(
+            size: size,
+            painter: LoginBackground(),
           ),
-          Container(
-            child: SignInButtonBuilder(
-              icon: Icons.verified_user,
-              backgroundColor: Colors.orange,
-              text: 'Sign In',
-              onPressed: () => _pushPage(context, SignInPage()),
-            ),
-            padding: const EdgeInsets.all(16),
-            alignment: Alignment.center,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              LogoImage(),
+              Text('로그인 화면'),
+              Stack(
+                alignment: Alignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(size.width * 0.05),
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(64),
+                      ),
+                      elevation: 24,
+                      child: Container(
+                        width: size.width * 0.8,
+                        height: size.height * 0.25,
+                        color: Palette.lightBlue,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(size.width * 0.05),
+                    child: AuthTypeSelector(),
+                  ),
+                  Container(),
+                  Padding(
+                    padding: EdgeInsets.all(size.width * 0.05),
+                    child: AuthSignInGoogleTypeSelector(),
+                  ),
+                ],
+              ),
+            ],
           ),
-          // Container(
-          //   child: SignInButtonBuilder(
-          //     icon: Icons.verified_user,
-          //     backgroundColor: Colors.red,
-          //     text: 'Chat APP',
-          //     onPressed: () =>
-          //         _pushPage(context, ChatLoginScreen(title: 'CHAT DEMO')),
-          //   ),
-          //   padding: const EdgeInsets.all(16),
-          //   alignment: Alignment.center,
-          // ),
         ],
       ),
     );
   }
 }
+
+/// Provides a UI to select a authentication type page
+//

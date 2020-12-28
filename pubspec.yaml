@@ -71,6 +71,9 @@ flutter:
   - assets/images/
   - assets/chatapp/
   - assets/hotel/
+  - assets/themestock/
+  - assets/fonts/
+  - assets/screenshots/
     # - assets/images/cover.jpg
     # - assets/images/img_not_available.jpeg
     # - assets/chatapp/mimi1.gif

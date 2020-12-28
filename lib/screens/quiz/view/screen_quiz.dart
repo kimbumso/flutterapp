@@ -4,11 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_app/config/palette.dart';
 import 'package:flutter_app/domain/quiz/src/models/models.dart';
+import 'package:flutter_app/providers/quiz_provider.dart';
 import 'package:flutter_app/screens/quiz/widgets/widgets.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:provider/provider.dart';
-
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class QuizScreen extends StatelessWidget {
   @override
@@ -70,27 +69,11 @@ class QuizScreen extends StatelessWidget {
   }
 }
 
-class QuizProvider {
-  final String _dataPath = "https://bskim01.herokuapp.com/quiz/3/";
-  List<Quiz> quizs;
-
-  Future<List<Quiz>> loadQuizData() async {
-    final response = await http.get(_dataPath);
-    if (response.statusCode == 200) {
-      // 만약 서버가 OK 응답을 반환하면, JSON을 파싱합니다.
-      return quizs = parseQuizs(utf8.decode(response.bodyBytes));
-    } else {
-      // 만약 응답이 OK가 아니면, 에러를 던집니다.
-      throw Exception('Failed to load post');
-    }
-  }
-}
-
 class QuizList extends StatelessWidget {
   List<int> _answers = [-1, -1, -1];
   List<bool> _answerState = [false, false, false, false];
   int _currentIndex = 0;
-  ScrollController _controller = ScrollController();
+  SwiperController _controller = SwiperController();
   // @override
   // void initState() {
   //   _controller = ScrollController();
@@ -129,7 +112,6 @@ class QuizList extends StatelessWidget {
           child: _quizs == null
               ? Container(child: CupertinoActivityIndicator(radius: 50.0))
               : ListView.builder(
-                  controller: _controller,
                   itemCount: _quizs?.length ?? 0,
                   shrinkWrap: true,
                   itemBuilder: (BuildContext context, int index) {
@@ -141,14 +123,31 @@ class QuizList extends StatelessWidget {
                     //         '${_quizs[index].title} ${_quizs[index].answer} | ${_quizs[index].candidates}'),
                     //   ),
                     // );
-                    return _buildQuizCard(_quizs[index], width, height);
+                    return Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: Colors.deepPurple),
+                      ),
+                      width: width * 0.85,
+                      height: height * 0.5,
+                      child: Swiper(
+                        controller: _controller,
+                        physics: NeverScrollableScrollPhysics(),
+                        loop: false,
+                        itemCount: _quizs.length,
+                        itemBuilder: (BuildContext context, int index_) {
+                          return _buildQuizCard(
+                              _quizs[index], width, height, index_);
+                        },
+                      ),
+                    );
                   }),
         ),
       ],
     );
   }
 
-  Widget _buildQuizCard(Quiz quiz, double width, double height) {
+  Widget _buildQuizCard(Quiz quiz, double width, double height, int index) {
     return Container(
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
@@ -193,10 +192,20 @@ class QuizList extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: RaisedButton(
-                  child: _currentIndex == 1 - 1 ? Text('결과보기') : Text('다음문제'),
+                  child:
+                      _currentIndex == index - 1 ? Text('결과보기') : Text('다음문제'),
                   textColor: Colors.white,
                   color: Colors.deepPurple,
-                  onPressed: _answers[_currentIndex] == -1 ? null : () {},
+                  onPressed: _answers[_currentIndex] == -1
+                      ? null
+                      : () {
+                          if (_currentIndex == index - 1) {
+                          } else {
+                            _answerState = [false, false, false, false];
+                            _currentIndex += 1;
+                            _controller.next();
+                          }
+                        },
                 ),
               ),
             ),

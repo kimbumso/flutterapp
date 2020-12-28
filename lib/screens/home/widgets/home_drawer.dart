@@ -4,6 +4,7 @@ import 'package:flutter_app/config/palette.dart';
 class HomeDrawer extends StatefulWidget {
   const HomeDrawer(
       {Key key,
+      this.currentUserId,
       this.screenIndex,
       this.iconAnimationController,
       this.callBackIndex})
@@ -12,12 +13,15 @@ class HomeDrawer extends StatefulWidget {
   final AnimationController iconAnimationController;
   final DrawerIndex screenIndex;
   final Function(DrawerIndex) callBackIndex;
-
+  final String currentUserId;
   @override
-  _HomeDrawerState createState() => _HomeDrawerState();
+  _HomeDrawerState createState() =>
+      _HomeDrawerState(currentUserId: currentUserId);
 }
 
 class _HomeDrawerState extends State<HomeDrawer> {
+  _HomeDrawerState({Key key, @required this.currentUserId});
+  final String currentUserId;
   List<DrawerList> drawerList;
   @override
   void initState() {
@@ -36,7 +40,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
         index: DrawerIndex.Help,
         labelName: 'Help',
         isAssetsImage: true,
-        imageName: 'assets/images/supportIcon.png',
+        imageName: 'assets/images/img_not_available.jpeg',
       ),
       DrawerList(
         index: DrawerIndex.FeedBack,
@@ -107,7 +111,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
                             child: ClipRRect(
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(60.0)),
-                              child: Image.asset('assets/images/userImage.png'),
+                              child: Image.asset(
+                                  'assets/images/img_not_available.jpeg'),
                             ),
                           ),
                         ),
@@ -117,7 +122,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   Padding(
                     padding: const EdgeInsets.only(top: 8, left: 4),
                     child: Text(
-                      'Chris Hemsworth',
+                      'UserName : ${currentUserId}',
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         color: Palette.grey,
