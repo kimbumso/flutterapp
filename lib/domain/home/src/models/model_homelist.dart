@@ -44,6 +44,11 @@ class HomeListGold {
       navigateScreen: QuizScreen(),
     ),
     HomeListGold(
+      title: '증권 상식 퀴즈 test',
+      imagePath: 'assets/images/cover.jpg',
+      navigateScreen: QuizScreen2(),
+    ),
+    HomeListGold(
       title: '오늘의 추천',
       imagePath: 'assets/images/recommend.jpg',
       navigateScreen: VoteScreen(),
@@ -60,32 +65,42 @@ class HomeListGold {
     ),
     HomeListGold(
       title: '테마 리스트',
-      imagePath: 'assets/images/ThemeStock.jpg',
+      imagePath: 'assets/images/bar-chart.png',
       navigateScreen: StockHomeScreen(),
     ),
     HomeListGold(
       title: '급등주 리스트',
-      imagePath: 'assets/images/ThemeStock.jpg',
+      imagePath: 'assets/images/jumpup.png',
       navigateScreen: StockHomeScreen(),
     ),
     HomeListGold(
       title: '코인 리스트',
-      imagePath: 'assets/images/ThemeStock.jpg',
+      imagePath: 'assets/images/coin.png',
       navigateScreen: StockHomeScreen(),
     ),
     HomeListGold(
       title: '환율 리스트',
-      imagePath: 'assets/images/ThemeStock.jpg',
+      imagePath: 'assets/images/exchangerate.png',
       navigateScreen: StockHomeScreen(),
     ),
     HomeListGold(
       title: '뉴스 리스트',
-      imagePath: 'assets/images/ThemeStock.jpg',
+      imagePath: 'assets/images/news.png',
       navigateScreen: StockHomeScreen(),
     ),
     HomeListGold(
       title: '세력 분석',
+      imagePath: 'assets/images/graph.png',
+      navigateScreen: StockHomeScreen(),
+    ),
+    HomeListGold(
+      title: '유용한 사이트',
       imagePath: 'assets/images/ThemeStock.jpg',
+      navigateScreen: StockHomeScreen(),
+    ),
+    HomeListGold(
+      title: '적중 내역',
+      imagePath: 'assets/images/hitlist.png',
       navigateScreen: StockHomeScreen(),
     ),
   ];

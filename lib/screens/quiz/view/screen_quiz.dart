@@ -1,35 +1,61 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_app/config/palette.dart';
 import 'package:flutter_app/domain/quiz/src/models/models.dart';
-import 'package:flutter_app/providers/quiz_provider.dart';
+import 'package:flutter_app/screens/quiz/quiz.dart';
 import 'package:flutter_app/screens/quiz/widgets/widgets.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+
 import 'package:provider/provider.dart';
 
-class QuizScreen extends StatelessWidget {
+class QuizScreen extends StatefulWidget {
+  @override
+  _QuizScreenState createState() => _QuizScreenState();
+}
+
+class _QuizScreenState extends State<QuizScreen> {
+  List<Quiz> _quizs;
+  List<int> _answers = [-1, -1, -1];
+  List<bool> _answerState = [false, false, false, false];
+  int _currentIndex = 0;
+  SwiperController _controller = SwiperController();
   @override
   Widget build(BuildContext context) {
-    return FutureProvider(
-      create: (_) => QuizProvider().loadQuizData(),
-      child: Scaffold(
-        backgroundColor: Palette.white,
-        body: Center(
-          child: Container(
-              padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  appBar('quiz_App'),
-                  Expanded(
-                    child: QuizList(),
+    _quizs = Provider.of<List<Quiz>>(context);
+    Size screenSize = MediaQuery.of(context).size;
+    double width = screenSize.width;
+    double height = screenSize.height;
+    // TODO: implement build
+    return Scaffold(
+      backgroundColor: Palette.dark_grey,
+      body: Center(
+        child: Container(
+            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: Colors.deepPurple),
+            ),
+            width: width * 0.85,
+            height: height * 0.5,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Expanded(
+                  child: Swiper(
+                    controller: _controller,
+                    physics: NeverScrollableScrollPhysics(),
+                    loop: false,
+                    itemCount: _quizs.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      print('quizs index : $index');
+                      return _buildQuizCard(
+                          _quizs[index], width, height, _quizs.length);
+                    },
                   ),
-                ],
-              )),
-        ),
+                )
+              ],
+            )),
       ),
     );
   }
@@ -67,85 +93,6 @@ class QuizScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-class QuizList extends StatelessWidget {
-  List<int> _answers = [-1, -1, -1];
-  List<bool> _answerState = [false, false, false, false];
-  int _currentIndex = 0;
-  SwiperController _controller = SwiperController();
-  // @override
-  // void initState() {
-  //   _controller = ScrollController();
-  //   _controller.addListener(_scrollListener); //the listener for up and down.
-  //   super.initState();
-  // }
-
-  // _scrollListener() {
-  //   if (_controller.offset >= _controller.position.maxScrollExtent &&
-  //       !_controller.position.outOfRange) {
-  //     setState(() {
-  //       //you can do anything here
-  //     });
-  //   }
-  //   if (_controller.offset <= _controller.position.minScrollExtent &&
-  //       !_controller.position.outOfRange) {
-  //     setState(() {
-  //       //you can do anything here
-  //     });
-  //   }
-  // }
-
-  @override
-  Widget build(BuildContext context) {
-    var _quizs = Provider.of<List<Quiz>>(context);
-    Size screenSize = MediaQuery.of(context).size;
-    double width = screenSize.width;
-    double height = screenSize.height;
-    return Column(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(top: 0, left: 12, right: 12),
-          child: Text('FutureProvider Example, users loaded from a File'),
-        ),
-        Expanded(
-          child: _quizs == null
-              ? Container(child: CupertinoActivityIndicator(radius: 50.0))
-              : ListView.builder(
-                  itemCount: _quizs?.length ?? 0,
-                  shrinkWrap: true,
-                  itemBuilder: (BuildContext context, int index) {
-                    // return Container(
-                    //   height: 50,
-                    //   color: Colors.grey[(index * 200) % 400],
-                    //   child: Center(
-                    //     child: Text(
-                    //         '${_quizs[index].title} ${_quizs[index].answer} | ${_quizs[index].candidates}'),
-                    //   ),
-                    // );
-                    return Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.deepPurple),
-                      ),
-                      width: width * 0.85,
-                      height: height * 0.5,
-                      child: Swiper(
-                        controller: _controller,
-                        physics: NeverScrollableScrollPhysics(),
-                        loop: false,
-                        itemCount: _quizs.length,
-                        itemBuilder: (BuildContext context, int index_) {
-                          return _buildQuizCard(
-                              _quizs[index], width, height, index_);
-                        },
-                      ),
-                    );
-                  }),
-        ),
-      ],
-    );
-  }
 
   Widget _buildQuizCard(Quiz quiz, double width, double height, int index) {
     return Container(
@@ -159,7 +106,7 @@ class QuizList extends StatelessWidget {
           Container(
             padding: EdgeInsets.fromLTRB(0, width * 0.024, 0, width * 0.024),
             child: Text(
-              'Q' + (_currentIndex + 1).toString() + '.',
+              'Q' + (index + 1).toString() + '.',
               style: TextStyle(
                 fontSize: width * 0.06,
                 fontWeight: FontWeight.bold,
@@ -200,10 +147,21 @@ class QuizList extends StatelessWidget {
                       ? null
                       : () {
                           if (_currentIndex == index - 1) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ResultScreen(
+                                  answers: _answers,
+                                  quizs: _quizs,
+                                ),
+                              ),
+                            );
                           } else {
                             _answerState = [false, false, false, false];
                             _currentIndex += 1;
                             _controller.next();
+                            // print(
+                            //     '_currentindex : $_currentIndex , index : $index');
                           }
                         },
                 ),
@@ -223,7 +181,18 @@ class QuizList extends StatelessWidget {
           text: quiz.candidates[i],
           width: width,
           answerState: _answerState[i],
-          tap: () {}));
+          tap: () {
+            setState(() {
+              for (int j = 0; j < 4; j++) {
+                if (j == i) {
+                  _answerState[j] = true;
+                  _answers[_currentIndex] = j;
+                } else {
+                  _answerState[j] = false;
+                }
+              }
+            });
+          }));
       _children.add(
         Padding(
           padding: EdgeInsets.all(width * 0.024),

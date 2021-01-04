@@ -36,7 +36,7 @@ class LogoImage extends StatelessWidget {
         child: FittedBox(
           fit: BoxFit.contain,
           child: CircleAvatar(
-            backgroundImage: AssetImage('assets/images/img_not_available.jpeg'),
+            backgroundImage: AssetImage('assets/images/login_logo.jpg'),
           ),
         ),
       ),
