@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/config/palette.dart';
+import 'package:flutter_app/domain/themestock/src/models/models.dart';
 import 'package:flutter_app/main.dart';
 import 'package:flutter_app/screens/themestock/view/view.dart';
 import 'package:flutter_app/screens/themestock/widgets/widgets.dart';
+import 'package:provider/provider.dart';
 
 class StockHomeScreen extends StatefulWidget {
   @override
@@ -11,9 +13,11 @@ class StockHomeScreen extends StatefulWidget {
 
 class _StockHomeScreenState extends State<StockHomeScreen> {
   CategoryType categoryType = CategoryType.ui;
+  List<ThemeStock> _themestocks;
 
   @override
   Widget build(BuildContext context) {
+    _themestocks = Provider.of<List<ThemeStock>>(context);
     return Container(
       color: Palette.nearlyWhite,
       child: Scaffold(
@@ -105,7 +109,7 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            '인기 종목',
+            '인기 테마',
             textAlign: TextAlign.left,
             style: TextStyle(
               fontWeight: FontWeight.w600,
@@ -219,7 +223,7 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
                           ),
                           keyboardType: TextInputType.text,
                           decoration: InputDecoration(
-                            labelText: 'Search for course',
+                            labelText: 'Search for stock',
                             border: InputBorder.none,
                             helperStyle: TextStyle(
                               fontWeight: FontWeight.bold,
@@ -276,7 +280,7 @@ class _StockHomeScreenState extends State<StockHomeScreen> {
                   ),
                 ),
                 Text(
-                  'theme Course',
+                  'theme Stock',
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,

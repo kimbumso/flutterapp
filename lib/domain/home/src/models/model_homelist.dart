@@ -43,21 +43,21 @@ class HomeListGold {
       imagePath: 'assets/images/cover.jpg',
       navigateScreen: QuizScreen(),
     ),
-    HomeListGold(
-      title: '증권 상식 퀴즈 test',
-      imagePath: 'assets/images/cover.jpg',
-      navigateScreen: QuizScreen2(),
-    ),
+    // HomeListGold(
+    //   title: '증권 상식 퀴즈 test',
+    //   imagePath: 'assets/images/cover.jpg',
+    //   navigateScreen: QuizScreen2(),
+    // ),
     HomeListGold(
       title: '오늘의 추천',
       imagePath: 'assets/images/recommend.jpg',
       navigateScreen: VoteScreen(),
     ),
-    HomeListGold(
-      title: '로그인 유저 전용',
-      imagePath: 'assets/images/login.jpg',
-      navigateScreen: LoginScreen(),
-    ),
+    // HomeListGold(
+    //   title: '로그인 유저 전용',
+    //   imagePath: 'assets/images/login.jpg',
+    //   navigateScreen: LoginScreen(),
+    // ),
     HomeListGold(
       title: '채팅',
       imagePath: 'assets/images/supportIcon.png',

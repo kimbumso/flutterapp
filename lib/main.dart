@@ -4,9 +4,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app/config/palette.dart';
+import 'package:flutter_app/domain/quiz/src/models/models.dart';
 import 'package:flutter_app/providers/quiz_provider.dart';
+import 'package:flutter_app/providers/themestock_provider.dart';
 import 'package:flutter_app/screens/home/home.dart';
 import 'package:provider/provider.dart';
+
+import 'domain/themestock/src/models/models.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,9 +37,12 @@ class MyApp extends StatelessWidget {
     ));
     return MultiProvider(
       providers: [
-        FutureProvider(
+        FutureProvider<List<Quiz>>(
           create: (context) => QuizProvider().loadQuizData(),
         ),
+        FutureProvider<List<ThemeStock>>(
+          create: (context) => ThemestockProvider().loadThemeData(),
+        )
       ],
       child: MaterialApp(
         title: 'Flutter UI',

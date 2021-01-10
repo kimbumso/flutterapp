@@ -1,4 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/config/palette.dart';
 import 'package:flutter_app/domain/quiz/src/models/models.dart';
@@ -21,7 +22,7 @@ class _QuizScreenState extends State<QuizScreen> {
   SwiperController _controller = SwiperController();
   @override
   Widget build(BuildContext context) {
-    _quizs = Provider.of<List<Quiz>>(context);
+    _quizs = Provider.of<List<Quiz>>(context, listen: false);
     Size screenSize = MediaQuery.of(context).size;
     double width = screenSize.width;
     double height = screenSize.height;
@@ -42,17 +43,20 @@ class _QuizScreenState extends State<QuizScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Expanded(
-                  child: Swiper(
-                    controller: _controller,
-                    physics: NeverScrollableScrollPhysics(),
-                    loop: false,
-                    itemCount: _quizs.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      print('quizs index : $index');
-                      return _buildQuizCard(
-                          _quizs[index], width, height, _quizs.length);
-                    },
-                  ),
+                  child: _quizs == null
+                      ? Container(
+                          child: CupertinoActivityIndicator(radius: 50.0))
+                      : Swiper(
+                          controller: _controller,
+                          physics: NeverScrollableScrollPhysics(),
+                          loop: false,
+                          itemCount: _quizs.length ?? 0,
+                          itemBuilder: (BuildContext context, int index) {
+                            print('quizs index : $index');
+                            return _buildQuizCard(
+                                _quizs[index], width, height, _quizs.length);
+                          },
+                        ),
                 )
               ],
             )),

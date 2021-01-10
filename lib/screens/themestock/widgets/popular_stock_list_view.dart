@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/config/palette.dart';
 import 'package:flutter_app/domain/themestock/src/models/models.dart';
 import 'package:flutter_app/main.dart';
+import 'package:provider/provider.dart';
 
 class PopularStockListView extends StatefulWidget {
   const PopularStockListView({Key key, this.callBack}) : super(key: key);
@@ -14,6 +15,8 @@ class PopularStockListView extends StatefulWidget {
 class _PopularStockListViewState extends State<PopularStockListView>
     with TickerProviderStateMixin {
   AnimationController animationController;
+  List<ThemeStock> _themeStocks;
+
   @override
   void initState() {
     animationController = AnimationController(
@@ -28,6 +31,8 @@ class _PopularStockListViewState extends State<PopularStockListView>
 
   @override
   Widget build(BuildContext context) {
+    _themeStocks = Provider.of<List<ThemeStock>>(context, listen: false);
+
     return Padding(
       padding: const EdgeInsets.only(top: 8),
       child: FutureBuilder<bool>(
@@ -41,9 +46,9 @@ class _PopularStockListViewState extends State<PopularStockListView>
               physics: const BouncingScrollPhysics(),
               scrollDirection: Axis.vertical,
               children: List<Widget>.generate(
-                Category.popularCourseList.length,
+                _themeStocks.length,
                 (int index) {
-                  final int count = Category.popularCourseList.length;
+                  final int count = _themeStocks.length;
                   final Animation<double> animation =
                       Tween<double>(begin: 0.0, end: 1.0).animate(
                     CurvedAnimation(
@@ -57,7 +62,7 @@ class _PopularStockListViewState extends State<PopularStockListView>
                     callback: () {
                       widget.callBack();
                     },
-                    category: Category.popularCourseList[index],
+                    themeStocks: _themeStocks[index],
                     animation: animation,
                     animationController: animationController,
                   );
@@ -80,14 +85,14 @@ class _PopularStockListViewState extends State<PopularStockListView>
 class StockCategoryView extends StatelessWidget {
   const StockCategoryView(
       {Key key,
-      this.category,
+      this.themeStocks,
       this.animationController,
       this.animation,
       this.callback})
       : super(key: key);
 
   final VoidCallback callback;
-  final Category category;
+  final ThemeStock themeStocks;
   final AnimationController animationController;
   final Animation<dynamic> animation;
 
@@ -133,7 +138,7 @@ class StockCategoryView extends StatelessWidget {
                                             padding: const EdgeInsets.only(
                                                 top: 16, left: 16, right: 16),
                                             child: Text(
-                                              category.title,
+                                              themeStocks.stockName,
                                               textAlign: TextAlign.left,
                                               style: TextStyle(
                                                 fontWeight: FontWeight.w600,
@@ -156,21 +161,21 @@ class StockCategoryView extends StatelessWidget {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.center,
                                               children: <Widget>[
-                                                Text(
-                                                  '${category.lessonCount} lesson',
-                                                  textAlign: TextAlign.left,
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.w200,
-                                                    fontSize: 12,
-                                                    letterSpacing: 0.27,
-                                                    color: Palette.grey,
-                                                  ),
-                                                ),
+                                                // Text(
+                                                //   '${themeStocks.ratesAverage} 전일',
+                                                //   textAlign: TextAlign.left,
+                                                //   style: TextStyle(
+                                                //     fontWeight: FontWeight.w200,
+                                                //     fontSize: 12,
+                                                //     letterSpacing: 0.27,
+                                                //     color: Palette.grey,
+                                                //   ),
+                                                // ),
                                                 Container(
                                                   child: Row(
                                                     children: <Widget>[
                                                       Text(
-                                                        '${category.rating}',
+                                                        '${themeStocks.ratesDay}',
                                                         textAlign:
                                                             TextAlign.left,
                                                         style: TextStyle(
@@ -230,7 +235,8 @@ class StockCategoryView extends StatelessWidget {
                                 const BorderRadius.all(Radius.circular(16.0)),
                             child: AspectRatio(
                                 aspectRatio: 1.28,
-                                child: Image.asset(category.imagePath)),
+                                child:
+                                    Image.asset('assets/images/bar-chart.png')),
                           ),
                         ),
                       ),
