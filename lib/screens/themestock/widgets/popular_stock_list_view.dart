@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/config/palette.dart';
 import 'package:flutter_app/domain/themestock/src/models/models.dart';
@@ -41,40 +42,43 @@ class _PopularStockListViewState extends State<PopularStockListView>
           if (!snapshot.hasData) {
             return const SizedBox();
           } else {
-            return GridView(
-              padding: const EdgeInsets.all(8),
-              physics: const BouncingScrollPhysics(),
-              scrollDirection: Axis.vertical,
-              children: List<Widget>.generate(
-                _themeStocks.length,
-                (int index) {
-                  final int count = _themeStocks.length;
-                  final Animation<double> animation =
-                      Tween<double>(begin: 0.0, end: 1.0).animate(
-                    CurvedAnimation(
-                      parent: animationController,
-                      curve: Interval((1 / count) * index, 1.0,
-                          curve: Curves.fastOutSlowIn),
+            return _themeStocks == null
+                ? Container(child: CupertinoActivityIndicator(radius: 50.0))
+                : GridView(
+                    padding: const EdgeInsets.all(8),
+                    physics: const BouncingScrollPhysics(),
+                    scrollDirection: Axis.vertical,
+                    children: List<Widget>.generate(
+                      _themeStocks.length,
+                      (int index) {
+                        final int count = _themeStocks.length;
+                        final Animation<double> animation =
+                            Tween<double>(begin: 0.0, end: 1.0).animate(
+                          CurvedAnimation(
+                            parent: animationController,
+                            curve: Interval((1 / count) * index, 1.0,
+                                curve: Curves.fastOutSlowIn),
+                          ),
+                        );
+                        animationController.forward();
+                        return StockCategoryView(
+                          callback: () {
+                            widget.callBack();
+                          },
+                          themeStocks: _themeStocks[index],
+                          animation: animation,
+                          animationController: animationController,
+                        );
+                      },
+                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 32.0,
+                      crossAxisSpacing: 32.0,
+                      childAspectRatio: 0.8,
                     ),
                   );
-                  animationController.forward();
-                  return StockCategoryView(
-                    callback: () {
-                      widget.callBack();
-                    },
-                    themeStocks: _themeStocks[index],
-                    animation: animation,
-                    animationController: animationController,
-                  );
-                },
-              ),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 32.0,
-                crossAxisSpacing: 32.0,
-                childAspectRatio: 0.8,
-              ),
-            );
           }
         },
       ),
