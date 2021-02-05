@@ -23,7 +23,8 @@ class _CategoryListViewState extends State<CategoryListView>
   Widget build(BuildContext context) {
     _themeStocks = Provider.of<List<ThemeStock>>(context, listen: false);
     return _themeStocks == null
-        ? Container(child: CupertinoActivityIndicator(radius: 50.0))
+        ? Container(
+            child: Center(child: CupertinoActivityIndicator(radius: 50.0)))
         : CarouselSlider(
             options: CarouselOptions(
               height: 150,
